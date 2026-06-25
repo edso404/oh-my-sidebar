@@ -126,7 +126,7 @@ const tui: TuiPlugin = async (api) => {
 };
 
 const plugin: TuiPluginModule & { id: string } = {
-  id: "streetturtle.context-progress",
+  id: "oh-my-sidebar.context-progress",
   tui,
 };
 
