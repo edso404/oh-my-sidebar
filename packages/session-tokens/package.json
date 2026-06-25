@@ -1,0 +1,45 @@
+{
+  "name": "@oh-my-sidebar/opencode-session-tokens",
+  "version": "0.1.0",
+  "description": "OpenCode TUI sidebar plugin for session token usage breakdown",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/edso404/oh-my-sidebar",
+    "directory": "packages/session-tokens"
+  },
+  "homepage": "https://github.com/edso404/oh-my-sidebar/tree/main/packages/session-tokens",
+  "bugs": {
+    "url": "https://github.com/edso404/oh-my-sidebar/issues"
+  },
+  "type": "module",
+  "exports": {
+    "./tui": "./dist/tui.tsx"
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "rm -rf dist && mkdir -p dist && cp src/index.tsx dist/tui.tsx",
+    "prepublishOnly": "pnpm build"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "keywords": [
+    "opencode",
+    "opencode-plugin",
+    "sidebar",
+    "tokens"
+  ],
+  "license": "MIT",
+  "engines": {
+    "opencode": ">=1.4.3"
+  },
+  "dependencies": {
+    "@opencode-ai/plugin": "catalog:",
+    "@opentui/core": "catalog:",
+    "@opentui/solid": "catalog:",
+    "solid-js": "catalog:"
+  }
+}
