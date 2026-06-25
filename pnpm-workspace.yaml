@@ -8,5 +8,9 @@ catalog:
   turbo: ^2.5.0
   "@changesets/cli": ^2.28.0
   "@biomejs/biome": ^1.9.0
+  "@opencode-ai/plugin": ^1.17.10
+  "@opentui/core": ^0.4.2
+  "@opentui/solid": ^0.4.2
+  solid-js: 1.9.12
 
 catalogMode: strict

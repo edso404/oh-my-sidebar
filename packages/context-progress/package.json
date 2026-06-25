@@ -1,0 +1,42 @@
+{
+  "name": "@zanbo/opencode-context-progress",
+  "version": "0.0.0",
+  "description": "OpenCode TUI sidebar plugin for context usage progress",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/edso404/opencode-zanbo-sidebar",
+    "directory": "packages/context-progress"
+  },
+  "homepage": "https://github.com/edso404/opencode-zanbo-sidebar/tree/master/packages/context-progress",
+  "bugs": {
+    "url": "https://github.com/edso404/opencode-zanbo-sidebar/issues"
+  },
+  "type": "module",
+  "exports": {
+    "./tui": {
+      "types": "./dist/tui.d.ts",
+      "import": "./dist/tui.js",
+      "default": "./dist/tui.js"
+    }
+  },
+  "files": ["dist", "README.md"],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "prepublishOnly": "pnpm build"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "keywords": ["opencode", "opencode-plugin", "sidebar", "context"],
+  "license": "MIT",
+  "engines": {
+    "opencode": ">=1.4.3"
+  },
+  "dependencies": {
+    "@opencode-ai/plugin": "catalog:",
+    "@opentui/core": "catalog:",
+    "@opentui/solid": "catalog:",
+    "solid-js": "catalog:"
+  }
+}
