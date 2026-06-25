@@ -1,0 +1,25 @@
+{
+  "name": "opencode-zanbo-sidebar",
+  "private": true,
+  "version": "0.0.0",
+  "scripts": {
+    "build": "turbo build",
+    "dev": "turbo dev",
+    "lint": "biome check .",
+    "format": "biome check --write .",
+    "check": "biome check . && turbo typecheck",
+    "typecheck": "turbo typecheck",
+    "test": "turbo test",
+    "changeset": "changeset",
+    "ci:publish": "turbo build && changeset publish"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "catalog:",
+    "@changesets/cli": "catalog:",
+    "tsup": "catalog:",
+    "turbo": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  },
+  "packageManager": "pnpm@9.15.4"
+}
