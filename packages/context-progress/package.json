@@ -13,19 +13,14 @@
   },
   "type": "module",
   "exports": {
-    "./tui": {
-      "types": "./dist/tui.d.ts",
-      "import": "./dist/tui.js",
-      "default": "./dist/tui.js"
-    }
+    "./tui": "./dist/tui.tsx"
   },
   "files": [
     "dist",
     "README.md"
   ],
   "scripts": {
-    "build": "tsup",
-    "dev": "tsup --watch",
+    "build": "rm -rf dist && mkdir -p dist && cp src/index.tsx dist/tui.tsx",
     "prepublishOnly": "pnpm build"
   },
   "publishConfig": {
