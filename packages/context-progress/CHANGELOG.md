@@ -1,5 +1,11 @@
 # @oh-my-sidebar/opencode-context-progress
 
+## 0.2.1
+
+### Patch Changes
+
+- 4c96607: Fix: use oh-my-sidebar.context-progress plugin ID instead of streetturtle.context-progress
+
 ## 0.2.0
 
 ### Minor Changes
