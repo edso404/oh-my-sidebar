@@ -1,6 +1,7 @@
+/** @jsxImportSource @opentui/solid */
+
 import type { TuiPlugin, TuiPluginApi, TuiPluginModule } from "@opencode-ai/plugin/tui";
 import { TextAttributes } from "@opentui/core";
-/** @jsxImportSource @opentui/solid */
 import { createMemo } from "solid-js";
 
 const BAR_WIDTH = 24;
@@ -17,7 +18,6 @@ function safeNumber(value: unknown): number {
   return typeof value === "number" && Number.isFinite(value) ? value : 0;
 }
 
-// biome-ignore lint/suspicious/noExplicitAny: plugin API types don't expose message internals
 function messageTokenCount(message: any): number {
   const input = safeNumber(message?.tokens?.input);
   const output = safeNumber(message?.tokens?.output);
@@ -37,10 +37,8 @@ function buildBar(percent: number): { bar: string; clamped: number } {
 }
 
 function View(props: { api: TuiPluginApi; sessionID: string }) {
-  // biome-ignore lint/suspicious/noExplicitAny: plugin API types don't expose session internals
   const messages = createMemo(() => props.api.state.session.messages(props.sessionID) as any[]);
   const sessionCost = createMemo(() => {
-    // biome-ignore lint/suspicious/noExplicitAny: plugin API types don't expose session state
     const sessionState = (props.api.state as any)?.session;
     const fromState = safeNumber(sessionState?.get?.(props.sessionID)?.cost);
     if (fromState > 0) return fromState;
@@ -128,7 +126,7 @@ const tui: TuiPlugin = async (api) => {
 };
 
 const plugin: TuiPluginModule & { id: string } = {
-  id: "oh-my-sidebar.context-progress",
+  id: "streetturtle.context-progress",
   tui,
 };
 
