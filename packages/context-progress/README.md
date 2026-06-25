@@ -17,15 +17,13 @@ npm install @oh-my-sidebar/opencode-context-progress
 
 ## Usage
 
-Register the plugin in your OpenCode configuration:
+Add the plugin to your OpenCode TUI configuration (`tui.jsonc`):
 
-```json
+```jsonc
 {
-  "plugins": {
-    "oh-my-sidebar.context-progress": {
-      "tui": "@oh-my-sidebar/opencode-context-progress/tui"
-    }
-  }
+  "plugin": [
+    "@oh-my-sidebar/opencode-context-progress"
+  ]
 }
 ```
 
