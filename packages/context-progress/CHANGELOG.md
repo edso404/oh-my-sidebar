@@ -1,5 +1,11 @@
 # @oh-my-sidebar/opencode-context-progress
 
+## 0.2.2
+
+### Patch Changes
+
+- f959039: fix: replace any with inline types for type safety
+
 ## 0.2.1
 
 ### Patch Changes
