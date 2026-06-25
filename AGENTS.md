@@ -1,7 +1,7 @@
 # @oh-my-sidebar Monorepo
 
-**Generated:** 2026-06-26
-**Stack:** pnpm 11+ · Turborepo 2.x · tsup · Biome · Vitest · changesets
+**Generated:** 2026-06-25 (updated)
+**Stack:** pnpm 9+ · Turborepo 2.x · tsup · Biome · Vitest · changesets
 
 ## OVERVIEW
 
@@ -27,8 +27,8 @@ pnpm monorepo for publishing scoped npm packages under `@oh-my-sidebar/xxx`. Eac
 |------|----------|-------|
 | Add new package | `packages/<name>/` | Copy `context-progress` as template (package.json, tsconfig.json, tsup.config.ts, README.md) |
 | Build | `pnpm build` | turbo runs per-package build in dependency order |
+| Publish | `.github/workflows/release.yml` | Auto on main merge via changesets/action |
 | CI config | `.github/workflows/ci.yml` | lint → typecheck → test → build |
-| Release pipeline | `.github/workflows/release.yml` | Auto-publishes on main merge via changesets/action |
 
 ## CONVENTIONS
 
@@ -51,22 +51,7 @@ pnpm typecheck      # turbo typecheck
 pnpm test           # turbo test
 pnpm changeset      # create a changeset
 pnpm check          # biome check + turbo typecheck
-pnpm ci:publish     # build + changeset publish (used by CI only)
 ```
-
-## RELEASE WORKFLOW
-
-1. **Create changeset** — `pnpm changeset` (or manually create `.changeset/*.md`)
-   - Select affected packages and bump type (patch/minor/major)
-   - Commit and push to a feature branch
-2. **Open PR** — merge feature branch into `main`
-3. **CI runs** — `lint → typecheck → test → build` on every push/PR
-4. **Release pipeline** (`.github/workflows/release.yml`) triggers on push to `main`:
-   - `changesets/action` bumps versions, updates changelogs, creates a release PR or publishes directly
-   - Publishes to npm via `pnpm ci:publish` (build + `changeset publish`)
-   - Uses OIDC trusted publishing (no npm token needed)
-
-> **Never `npm publish` manually.** Always go through the changesets → PR → main → release pipeline.
 
 ## NOTES
 
