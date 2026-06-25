@@ -14,10 +14,7 @@
   "linter": {
     "enabled": true,
     "rules": {
-      "preset": "recommended",
-      "a11y": {
-        "noStaticElementInteractions": "off"
-      }
+      "preset": "recommended"
     }
   },
   "assist": { "actions": { "source": { "organizeImports": "on" } } }

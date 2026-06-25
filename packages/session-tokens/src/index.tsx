@@ -74,7 +74,12 @@ function View(props: { api: TuiPluginApi; sessionID: string }) {
   return (
     <Show when={show()}>
       <box>
-        <box flexDirection="row" gap={1} onMouseDown={() => canExpand() && setOpen((x) => !x)}>
+        <button
+          type="button"
+          flexDirection="row"
+          gap={1}
+          onMouseDown={() => canExpand() && setOpen((x) => !x)}
+        >
           <Show when={canExpand()}>
             <text fg={theme().text}>{open() ? "▼" : "▶"}</text>
           </Show>
@@ -82,7 +87,7 @@ function View(props: { api: TuiPluginApi; sessionID: string }) {
             <b>Session Tokens</b>
           </text>
           <text fg={theme().textMuted}>{formatInt(data().total)}</text>
-        </box>
+        </button>
 
         <Show when={canExpand() && open()}>
           <For each={data().perModel.slice(0, MAX_MODEL_ROWS)}>
