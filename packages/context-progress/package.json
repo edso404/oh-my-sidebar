@@ -36,7 +36,7 @@
   "engines": {
     "opencode": ">=1.4.3"
   },
-  "peerDependencies": {
+  "dependencies": {
     "@opencode-ai/plugin": "catalog:",
     "@opentui/core": "catalog:",
     "@opentui/solid": "catalog:",
