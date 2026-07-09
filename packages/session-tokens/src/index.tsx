@@ -1,6 +1,11 @@
 /** @jsxImportSource @opentui/solid */
 
-import type { TuiPlugin, TuiPluginApi, TuiPluginModule } from "@opencode-ai/plugin/tui";
+import type {
+  TuiPlugin,
+  TuiPluginApi,
+  TuiPluginModule,
+  TuiThemeCurrent,
+} from "@opencode-ai/plugin/tui";
 import { createMemo, createSignal, For, Show } from "solid-js";
 
 const MAX_MODEL_ROWS = 10;
@@ -32,9 +37,8 @@ function shortModelLabel(label: string): string {
   return `${label.slice(0, 25)}...`;
 }
 
-function View(props: { api: TuiPluginApi; sessionID: string }) {
+function View(props: { api: TuiPluginApi; sessionID: string; theme: TuiThemeCurrent }) {
   const [open, setOpen] = createSignal(false);
-  const theme = () => props.api.theme.current;
   const messages = createMemo(() => props.api.state.session.messages(props.sessionID));
   const session = createMemo(() => props.api.state.session.get(props.sessionID));
 
@@ -67,10 +71,7 @@ function View(props: { api: TuiPluginApi; sessionID: string }) {
     const sessionTotal = spentTokenCount(session()?.tokens);
     const total = breakdownTotal > 0 ? breakdownTotal : sessionTotal;
 
-    return {
-      total,
-      perModel,
-    };
+    return { total, perModel };
   });
 
   const show = createMemo(() => data().total > 0);
@@ -79,33 +80,33 @@ function View(props: { api: TuiPluginApi; sessionID: string }) {
   return (
     <Show when={show()}>
       <box>
-        <button
-          type="button"
+        <box
           flexDirection="row"
           gap={1}
+          selectable={true}
           onMouseDown={() => canExpand() && setOpen((x) => !x)}
         >
           <Show when={canExpand()}>
-            <text fg={theme().text}>{open() ? "▼" : "▶"}</text>
+            <text fg={props.theme.text}>{open() ? "▼" : "▶"}</text>
           </Show>
-          <text fg={theme().text}>
+          <text fg={props.theme.text}>
             <b>Session Tokens</b>
           </text>
-          <text fg={theme().textMuted}>{formatInt(data().total)}</text>
-        </button>
+          <text fg={props.theme.textMuted}>{formatInt(data().total)}</text>
+        </box>
 
         <Show when={canExpand() && open()}>
           <For each={data().perModel.slice(0, MAX_MODEL_ROWS)}>
             {(row) => (
               <box flexDirection="row">
-                <text fg={theme().textMuted}>{shortModelLabel(row.model)}</text>
+                <text fg={props.theme.textMuted}>{shortModelLabel(row.model)}</text>
                 <box flexGrow={1} />
-                <text fg={theme().textMuted}>{formatInt(row.tokens)}</text>
+                <text fg={props.theme.textMuted}>{formatInt(row.tokens)}</text>
               </box>
             )}
           </For>
           <Show when={data().perModel.length > MAX_MODEL_ROWS}>
-            <text fg={theme().textMuted}>+{data().perModel.length - MAX_MODEL_ROWS} more</text>
+            <text fg={props.theme.textMuted}>+{data().perModel.length - MAX_MODEL_ROWS} more</text>
           </Show>
         </Show>
       </box>
@@ -117,14 +118,14 @@ const tui: TuiPlugin = async (api) => {
   api.slots.register({
     order: 120,
     slots: {
-      sidebar_content(_ctx, props) {
-        return <View api={api} sessionID={props.session_id} />;
+      sidebar_content(ctx, props) {
+        return <View api={api} sessionID={props.session_id} theme={ctx.theme.current} />;
       },
     },
   });
 };
 
-const plugin: TuiPluginModule & { id: string } = {
+const plugin: TuiPluginModule = {
   id: "oh-my-sidebar.session-tokens",
   tui,
 };
