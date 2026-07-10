@@ -1,5 +1,17 @@
 # @oh-my-sidebar/opencode-context-progress
 
+## 0.2.6
+
+### Patch Changes
+
+- 93a042e: Fix: build TSX to JS with tsup, use peerDependencies like other plugins
+
+  Align with OpenCode TUI plugin conventions (e.g. opencode-visual-cache):
+
+  - Build TSX → JS via tsup with peer deps externalized
+  - Export `./tui` as `dist/tui.js` instead of raw `dist/tui.tsx`
+  - Use `peerDependencies` for all runtime deps
+
 ## 0.2.5
 
 ### Patch Changes
