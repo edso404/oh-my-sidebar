@@ -13,14 +13,16 @@
   },
   "type": "module",
   "exports": {
-    "./tui": "./dist/tui.tsx"
+    "./tui": {
+      "import": "./dist/tui.js"
+    }
   },
   "files": [
     "dist",
     "README.md"
   ],
   "scripts": {
-    "build": "rm -rf dist && mkdir -p dist && cp src/index.tsx dist/tui.tsx",
+    "build": "tsup",
     "prepublishOnly": "pnpm build"
   },
   "publishConfig": {
@@ -36,7 +38,10 @@
   "engines": {
     "opencode": ">=1.4.3"
   },
-  "dependencies": {
-    "@opencode-ai/plugin": "catalog:"
+  "peerDependencies": {
+    "@opencode-ai/plugin": "catalog:",
+    "@opentui/core": "catalog:",
+    "@opentui/solid": "catalog:",
+    "solid-js": "catalog:"
   }
 }
