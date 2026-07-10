@@ -8,5 +8,5 @@ export default defineConfig({
   format: ["esm"],
   clean: true,
   external: ["@opencode-ai/plugin", "@opentui/core", "@opentui/solid", "solid-js"],
-  esbuildPlugins: [solidPlugin({ solid: { moduleName: "@opentui/solid" } })],
+  esbuildPlugins: [solidPlugin({ solid: { moduleName: "@opentui/solid", generate: "universal" } })],
 });
