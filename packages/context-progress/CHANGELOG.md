@@ -1,5 +1,17 @@
 # @oh-my-sidebar/opencode-context-progress
 
+## 0.2.7
+
+### Patch Changes
+
+- 72f9f0b: Fix: use esbuild-plugin-solid for proper Solid.js JSX compilation
+
+  Use `esbuild-plugin-solid` in tsup config to compile JSX into Solid
+  runtime calls (`createComponent`, `template`, `effect`, `memo`)
+  instead of generic `jsx()` calls. This ensures Solid's reactive
+  system correctly connects signals and memos, fixing the issue where
+  plugins rendered but showed no data.
+
 ## 0.2.6
 
 ### Patch Changes
