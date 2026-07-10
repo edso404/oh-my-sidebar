@@ -15,7 +15,7 @@ catalog:
   "@opencode-ai/plugin": ^1.17.16
   "@opentui/core": ^0.4.2
   "@opentui/solid": ^0.4.2
-  solid-js: ^1.9.0
+  solid-js: 1.9.12
   "@types/node": ^26.0.0
 
 catalogMode: strict
