@@ -37,9 +37,6 @@
     "opencode": ">=1.4.3"
   },
   "dependencies": {
-    "@opencode-ai/plugin": "catalog:",
-    "@opentui/core": "catalog:",
-    "@opentui/solid": "catalog:",
-    "solid-js": "catalog:"
+    "@opencode-ai/plugin": "catalog:"
   }
 }
