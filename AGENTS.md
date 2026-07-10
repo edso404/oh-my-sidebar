@@ -35,10 +35,11 @@ pnpm monorepo for publishing scoped npm packages under `@oh-my-sidebar/xxx`. Eac
 - **Package names**: `@oh-my-sidebar/opencode-<name>` with `"access": "public"` in changesets config
 - **Inter-package deps**: `"@oh-my-sidebar/other": "workspace:*"` (auto via `.npmrc`)
 - **Version lock**: All shared devDeps in `pnpm-workspace.yaml` catalog with `catalogMode: strict`
-- **Build**: `cp src/index.tsx dist/tui.tsx` (simple copy, no bundling) for each package
+- **Build**: `tsup` (bundles TSX → JS with peer deps externalized) for each package
 - **Type checking**: `tsc --noEmit` (separate from build)
 - **Testing**: Vitest per package
-- **Plugin exports**: Each package exposes `./tui` entrypoint pointing to `dist/tui.tsx`
+- **Plugin exports**: Each package exposes `./tui` entrypoint pointing to `dist/tui.js`
+- **Dependencies**: Use `peerDependencies` for runtime deps (`@opencode-ai/plugin`, `@opentui/core`, `@opentui/solid`, `solid-js`); these are provided by the OpenCode host at runtime
 
 ## COMMANDS
 
@@ -53,6 +54,18 @@ pnpm changeset      # create a changeset
 pnpm check          # biome check + turbo typecheck
 pnpm ci:publish     # build + changeset publish (used by CI only)
 ```
+
+## NEW WORK PREREQUISITES
+
+Before starting any new feature, fix, or task:
+
+1. **Branch check** — Must be on `main`. If not, stash/commit changes and switch to `main`.
+2. **Remote sync** — `git pull origin main` to ensure local `main` is up to date.
+3. **Clean working tree** — `git status` must show no uncommitted changes. If dirty, ask user how to handle.
+4. **New branch** — Create a feature/fix branch from latest `main`: `git checkout -b <type>/<description>`.
+5. **Push** — Push branch to remote and set upstream: `git push -u origin <branch>`.
+
+> **Never start implementation directly on `main`.** Always use a feature branch.
 
 ## RELEASE WORKFLOW
 

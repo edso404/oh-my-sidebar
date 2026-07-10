@@ -1,3 +1,4 @@
+import { solidPlugin } from "esbuild-plugin-solid";
 import { defineConfig } from "tsup";
 
 export default defineConfig({
@@ -7,8 +8,5 @@ export default defineConfig({
   format: ["esm"],
   clean: true,
   external: ["@opencode-ai/plugin", "@opentui/core", "@opentui/solid", "solid-js"],
-  esbuildOptions(options) {
-    options.jsx = "automatic";
-    options.jsxImportSource = "@opentui/solid";
-  },
+  esbuildPlugins: [solidPlugin({ solid: { moduleName: "@opentui/solid" } })],
 });
