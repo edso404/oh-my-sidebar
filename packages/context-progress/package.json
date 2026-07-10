@@ -1,6 +1,6 @@
 {
   "name": "@oh-my-sidebar/opencode-context-progress",
-  "version": "0.2.7",
+  "version": "0.2.8",
   "description": "OpenCode TUI sidebar plugin for context usage progress",
   "repository": {
     "type": "git",
