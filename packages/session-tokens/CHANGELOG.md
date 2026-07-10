@@ -1,5 +1,16 @@
 # @oh-my-sidebar/opencode-session-tokens
 
+## 0.1.7
+
+### Patch Changes
+
+- e49de81: Fix: use generate:universal mode in esbuild-plugin-solid
+
+  `@opentui/solid` is a universal renderer, not DOM. Explicitly set
+  `generate: "universal"` so the Solid compiler produces correct runtime
+  calls (`createComponent`, `effect`, `insert`, `createElement` instead
+  of `template`, `setAttribute`).
+
 ## 0.1.6
 
 ### Patch Changes
