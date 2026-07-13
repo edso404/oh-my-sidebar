@@ -1,5 +1,11 @@
 # @oh-my-sidebar/opencode-session-tokens
 
+## 1.0.0
+
+### Major Changes
+
+- 7da4851: Release v1.0.0 - initial stable release
+
 ## 0.1.7
 
 ### Patch Changes
