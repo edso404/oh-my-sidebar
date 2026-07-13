@@ -1,52 +1,27 @@
 /** @jsxImportSource @opentui/solid */
 
+import {
+  formatInt,
+  formatMoney,
+  isAssistantMessage,
+  safeNumber,
+} from "@oh-my-sidebar/opencode-shared";
 import type {
   TuiPlugin,
   TuiPluginApi,
   TuiPluginModule,
   TuiThemeCurrent,
 } from "@opencode-ai/plugin/tui";
+import type { AssistantMessage, Message } from "@opencode-ai/sdk/v2";
 import { TextAttributes } from "@opentui/core";
 import { createMemo } from "solid-js";
 
 const BAR_WIDTH = 24;
 
-function formatInt(value: number): string {
-  return new Intl.NumberFormat("en-US").format(Math.max(0, Math.round(value)));
-}
-
-function formatMoney(value: number): string {
-  return `$${value.toFixed(2)}`;
-}
-
-function safeNumber(value: unknown): number {
-  return typeof value === "number" && Number.isFinite(value) ? value : 0;
-}
-
-function readCost(source: unknown): number {
-  const candidates = [
-    (source as Record<string, unknown>)?.cost,
-    ((source as Record<string, unknown>)?.info as Record<string, unknown> | undefined)?.cost,
-    ((source as Record<string, unknown>)?.usage as Record<string, unknown> | undefined)?.cost,
-    ((source as Record<string, unknown>)?.metrics as Record<string, unknown> | undefined)?.cost,
-  ];
-  for (const c of candidates) {
-    const n = typeof c === "number" ? c : typeof c === "string" && c !== "" ? Number(c) : NaN;
-    if (Number.isFinite(n) && n > 0) return n;
-  }
-  return 0;
-}
-
-function messageTokenCount(message: unknown): number {
-  const msg = message as Record<string, unknown> | undefined;
-  const tokens = msg?.tokens as Record<string, unknown> | undefined;
-  const input = safeNumber(tokens?.input);
-  const output = safeNumber(tokens?.output);
-  const reasoning = safeNumber(tokens?.reasoning);
-  const cache = tokens?.cache as { read?: unknown; write?: unknown } | undefined;
-  const cacheRead = safeNumber(cache?.read);
-  const cacheWrite = safeNumber(cache?.write);
-  return input + output + reasoning + cacheRead + cacheWrite;
+function readCost(m: Message): number {
+  if (!isAssistantMessage(m)) return 0;
+  const n = m.cost;
+  return typeof n === "number" && Number.isFinite(n) && n > 0 ? n : 0;
 }
 
 function buildBar(percent: number): { bar: string; clamped: number } {
@@ -60,53 +35,44 @@ function buildBar(percent: number): { bar: string; clamped: number } {
 
 function View(props: { api: TuiPluginApi; sessionID: string; theme: TuiThemeCurrent }) {
   const messages = createMemo(() => props.api.state.session.messages(props.sessionID));
-  const sessionCost = createMemo(() => {
-    const sessionState = (props.api.state as Record<string, unknown>)?.session as
-      | Record<string, unknown>
-      | undefined;
-    const fromState = readCost(
-      (sessionState?.get as (id: string) => unknown | undefined)?.(props.sessionID),
-    );
-    if (fromState > 0) return fromState;
 
-    return (messages() as unknown[])
-      .filter((m) => {
-        const role =
-          ((m as Record<string, unknown>)?.role as string) ??
-          ((m as Record<string, unknown>)?.info as Record<string, unknown> | undefined)?.role;
-        return role === "assistant";
-      })
-      .reduce((sum, m) => sum + readCost(m), 0);
+  const sessionCost = createMemo(() => {
+    const sessionState = props.api.state.session.get(props.sessionID);
+    const fromCost = (sessionState as { cost?: unknown })?.cost;
+    if (typeof fromCost === "number" && Number.isFinite(fromCost) && fromCost > 0) return fromCost;
+
+    return messages()
+      .filter(isAssistantMessage)
+      .reduce<number>((sum, m) => sum + readCost(m), 0);
+  });
+
+  const lastAssistant = createMemo(() => {
+    return messages().findLast(
+      (m): m is AssistantMessage => isAssistantMessage(m) && m.tokens.output > 0,
+    );
+  });
+
+  const modelInfo = createMemo(() => {
+    const last = lastAssistant();
+    if (!last) return null;
+    return (
+      props.api.state.provider.find((item) => item.id === last.providerID)?.models?.[
+        last.modelID
+      ] ?? null
+    );
   });
 
   const usage = createMemo(() => {
-    const lastAssistant = (messages() as unknown[]).findLast((m) => {
-      const role =
-        ((m as Record<string, unknown>)?.role as string) ??
-        ((m as Record<string, unknown>)?.info as Record<string, unknown> | undefined)?.role;
-      const output = safeNumber(
-        ((m as Record<string, unknown>)?.tokens as Record<string, unknown> | undefined)?.output,
-      );
-      return role === "assistant" && output > 0;
-    });
+    const last = lastAssistant();
+    if (!last) return { tokens: 0, contextWindow: 0, percent: 0 };
 
-    if (!lastAssistant) {
-      return { tokens: 0, contextWindow: 0, percent: 0 };
-    }
-
-    const tokens = messageTokenCount(lastAssistant);
-    const providerID =
-      ((lastAssistant as Record<string, unknown>)?.providerID as string) ??
-      ((lastAssistant as Record<string, unknown>)?.info as Record<string, unknown> | undefined)
-        ?.providerID;
-    const modelID =
-      ((lastAssistant as Record<string, unknown>)?.modelID as string) ??
-      ((lastAssistant as Record<string, unknown>)?.info as Record<string, unknown> | undefined)
-        ?.modelID;
-    const model = props.api.state.provider.find((item) => item.id === providerID)?.models?.[
-      modelID
-    ];
-    const contextWindow = safeNumber(model?.limit?.context);
+    const tokens =
+      last.tokens.input +
+      last.tokens.output +
+      last.tokens.reasoning +
+      last.tokens.cache.read +
+      last.tokens.cache.write;
+    const contextWindow = safeNumber(modelInfo()?.limit?.context);
     const percent = contextWindow > 0 ? Math.round((tokens / contextWindow) * 100) : 0;
 
     return { tokens, contextWindow, percent };
