@@ -1,20 +1,22 @@
 {
-  "name": "@oh-my-sidebar/opencode-context-progress",
-  "version": "0.2.8",
-  "description": "OpenCode TUI sidebar plugin for context usage progress",
+  "name": "@oh-my-sidebar/opencode-shared",
+  "version": "0.0.0",
+  "description": "Shared utilities for @oh-my-sidebar TUI plugins",
   "repository": {
     "type": "git",
     "url": "https://github.com/edso404/oh-my-sidebar",
-    "directory": "packages/context-progress"
+    "directory": "packages/shared"
   },
-  "homepage": "https://github.com/edso404/oh-my-sidebar/tree/main/packages/context-progress",
+  "homepage": "https://github.com/edso404/oh-my-sidebar/tree/main/packages/shared",
   "bugs": {
     "url": "https://github.com/edso404/oh-my-sidebar/issues"
   },
+  "private": true,
   "type": "module",
   "exports": {
-    "./tui": {
-      "import": "./dist/tui.js"
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
     }
   },
   "files": [
@@ -24,8 +26,7 @@
   "scripts": {
     "build": "tsup",
     "typecheck": "tsc --noEmit",
-    "test": "vitest run",
-    "prepublishOnly": "pnpm build"
+    "test": "vitest run"
   },
   "publishConfig": {
     "access": "public"
@@ -34,7 +35,7 @@
     "opencode",
     "opencode-plugin",
     "sidebar",
-    "context"
+    "shared"
   ],
   "license": "MIT",
   "engines": {
@@ -42,12 +43,9 @@
   },
   "peerDependencies": {
     "@opencode-ai/plugin": "catalog:",
-    "@opentui/core": "catalog:",
-    "@opentui/solid": "catalog:",
-    "solid-js": "catalog:"
+    "@opencode-ai/sdk": "catalog:"
   },
   "devDependencies": {
-    "@oh-my-sidebar/opencode-shared": "workspace:*",
     "@opencode-ai/plugin": "catalog:",
     "@opencode-ai/sdk": "catalog:",
     "@opentui/core": "catalog:",

@@ -1,5 +1,6 @@
 /** @jsxImportSource @opentui/solid */
 
+import { formatInt, isAssistantMessage, spentTokenCount } from "@oh-my-sidebar/opencode-shared";
 import type {
   TuiPlugin,
   TuiPluginApi,
@@ -9,28 +10,6 @@ import type {
 import { createMemo, createSignal, For, Show } from "solid-js";
 
 const MAX_MODEL_ROWS = 10;
-const INT_FORMATTER = new Intl.NumberFormat("en-US");
-
-function safeNumber(value: unknown): number {
-  return typeof value === "number" && Number.isFinite(value) ? value : 0;
-}
-
-function spentTokenCount(tokens: {
-  input?: unknown;
-  output?: unknown;
-  reasoning?: unknown;
-  cache?: { write?: unknown };
-}): number {
-  const input = safeNumber(tokens?.input);
-  const output = safeNumber(tokens?.output);
-  const reasoning = safeNumber(tokens?.reasoning);
-  const cacheWrite = safeNumber(tokens?.cache?.write);
-  return input + output + reasoning + cacheWrite;
-}
-
-function formatInt(value: number): string {
-  return INT_FORMATTER.format(Math.max(0, Math.round(value)));
-}
 
 function shortModelLabel(label: string): string {
   if (label.length <= 28) return label;
@@ -48,27 +27,35 @@ function View(props: { api: TuiPluginApi; sessionID: string; theme: TuiThemeCurr
     const seen = new Set<string>();
 
     for (const message of messages()) {
-      const role = message?.role ?? message?.info?.role;
-      if (role !== "assistant") continue;
+      if (!isAssistantMessage(message)) continue;
 
-      const messageID = message?.id;
-      if (typeof messageID === "string" && seen.has(messageID)) continue;
-      if (typeof messageID === "string") seen.add(messageID);
+      if (seen.has(message.id)) continue;
+      seen.add(message.id);
 
-      const count = spentTokenCount(message?.tokens);
+      const count = spentTokenCount(message.tokens);
       if (count <= 0) continue;
 
-      const modelID = message?.modelID ?? message?.info?.modelID ?? "unknown";
-
       breakdownTotal += count;
-      totals.set(modelID, (totals.get(modelID) ?? 0) + count);
+      totals.set(message.modelID, (totals.get(message.modelID) ?? 0) + count);
     }
 
     const perModel = [...totals.entries()]
       .map(([model, tokens]) => ({ model, tokens }))
       .sort((a, b) => b.tokens - a.tokens);
 
-    const sessionTotal = spentTokenCount(session()?.tokens);
+    const sessionTokens = (
+      session() as
+        | {
+            tokens?: {
+              input: number;
+              output: number;
+              reasoning: number;
+              cache: { read: number; write: number };
+            };
+          }
+        | undefined
+    )?.tokens;
+    const sessionTotal = sessionTokens ? spentTokenCount(sessionTokens) : 0;
     const total = breakdownTotal > 0 ? breakdownTotal : sessionTotal;
 
     return { total, perModel };
@@ -83,6 +70,7 @@ function View(props: { api: TuiPluginApi; sessionID: string; theme: TuiThemeCurr
         <box
           flexDirection="row"
           gap={1}
+          // @ts-expect-error - selectable is a runtime Renderable property, not in BoxProps type
           selectable={true}
           onMouseDown={() => canExpand() && setOpen((x) => !x)}
         >

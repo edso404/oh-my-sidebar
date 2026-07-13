@@ -23,6 +23,8 @@
   ],
   "scripts": {
     "build": "tsup",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
     "prepublishOnly": "pnpm build"
   },
   "publishConfig": {
@@ -40,6 +42,14 @@
   },
   "peerDependencies": {
     "@opencode-ai/plugin": "catalog:",
+    "@opentui/core": "catalog:",
+    "@opentui/solid": "catalog:",
+    "solid-js": "catalog:"
+  },
+  "devDependencies": {
+    "@oh-my-sidebar/opencode-shared": "workspace:*",
+    "@opencode-ai/plugin": "catalog:",
+    "@opencode-ai/sdk": "catalog:",
     "@opentui/core": "catalog:",
     "@opentui/solid": "catalog:",
     "solid-js": "catalog:"
