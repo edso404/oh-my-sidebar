@@ -31,4 +31,44 @@ describe("spentTokenCount", () => {
     };
     expect(spentTokenCount(tokens)).toBe(200);
   });
+
+  it("handles undefined tokens", () => {
+    expect(spentTokenCount(undefined)).toBe(0);
+  });
+
+  it("handles null tokens", () => {
+    expect(spentTokenCount(null)).toBe(0);
+  });
+
+  it("prefers tokens.total when available", () => {
+    const tokens = {
+      total: 30000,
+      input: 0,
+      output: 1500,
+      reasoning: 0,
+      cache: { read: 0, write: 0 },
+    };
+    expect(spentTokenCount(tokens)).toBe(30000);
+  });
+
+  it("falls back to sum when tokens.total is 0", () => {
+    const tokens = {
+      total: 0,
+      input: 100,
+      output: 200,
+      reasoning: 50,
+      cache: { read: 0, write: 30 },
+    };
+    expect(spentTokenCount(tokens)).toBe(380);
+  });
+
+  it("falls back to sum when tokens.total is undefined", () => {
+    const tokens = {
+      input: 100,
+      output: 200,
+      reasoning: 50,
+      cache: { read: 0, write: 30 },
+    };
+    expect(spentTokenCount(tokens)).toBe(380);
+  });
 });
