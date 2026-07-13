@@ -6,9 +6,7 @@ import type { AssistantMessage, Message } from "@opencode-ai/sdk/v2";
  * Cache reads are excluded since they don't consume quota.
  * Accepts undefined/null for runtime safety (streaming messages, partial data).
  */
-export function spentTokenCount(
-  tokens: AssistantMessage["tokens"] | undefined | null,
-): number {
+export function spentTokenCount(tokens: AssistantMessage["tokens"] | undefined | null): number {
   if (!tokens) return 0;
   if (typeof tokens.total === "number" && Number.isFinite(tokens.total) && tokens.total > 0) {
     return tokens.total;
