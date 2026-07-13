@@ -1,5 +1,11 @@
 # @oh-my-sidebar/opencode-context-progress
 
+## 1.0.1
+
+### Patch Changes
+
+- da6f105: fix: patch bump for CI release
+
 ## 1.0.0
 
 ### Major Changes

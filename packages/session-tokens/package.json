@@ -1,6 +1,6 @@
 {
   "name": "@oh-my-sidebar/opencode-session-tokens",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "OpenCode TUI sidebar plugin for session token usage breakdown",
   "repository": {
     "type": "git",
