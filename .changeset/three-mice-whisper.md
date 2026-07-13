@@ -1,6 +1,6 @@
 ---
-"@oh-my-sidebar/context-progress": patch
-"@oh-my-sidebar/session-tokens": patch
+"@oh-my-sidebar/opencode-context-progress": patch
+"@oh-my-sidebar/opencode-session-tokens": patch
 ---
 
 fix: patch bump for CI release
