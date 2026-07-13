@@ -81,7 +81,6 @@ function View(props: { api: TuiPluginApi; sessionID: string; theme: TuiThemeCurr
   const compactCount = createMemo(() => {
     let count = 0;
     for (const message of messages()) {
-      if (!isAssistantMessage(message)) continue;
       const parts = props.api.state.part(message.id);
       for (const part of parts) {
         if (part.type === "compaction") count++;
