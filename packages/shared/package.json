@@ -11,6 +11,7 @@
   "bugs": {
     "url": "https://github.com/edso404/oh-my-sidebar/issues"
   },
+  "private": true,
   "type": "module",
   "exports": {
     ".": {
