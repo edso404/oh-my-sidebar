@@ -19,44 +19,27 @@ function shortModelLabel(label: string): string {
 function View(props: { api: TuiPluginApi; sessionID: string; theme: TuiThemeCurrent }) {
   const [open, setOpen] = createSignal(false);
   const messages = createMemo(() => props.api.state.session.messages(props.sessionID));
-  const session = createMemo(() => props.api.state.session.get(props.sessionID));
 
   const data = createMemo(() => {
     const totals = new Map<string, number>();
-    let breakdownTotal = 0;
     const seen = new Set<string>();
+    let total = 0;
 
     for (const message of messages()) {
       if (!isAssistantMessage(message)) continue;
-
       if (seen.has(message.id)) continue;
       seen.add(message.id);
 
       const count = spentTokenCount(message.tokens);
       if (count <= 0) continue;
 
-      breakdownTotal += count;
+      total += count;
       totals.set(message.modelID, (totals.get(message.modelID) ?? 0) + count);
     }
 
     const perModel = [...totals.entries()]
       .map(([model, tokens]) => ({ model, tokens }))
       .sort((a, b) => b.tokens - a.tokens);
-
-    const sessionTokens = (
-      session() as
-        | {
-            tokens?: {
-              input: number;
-              output: number;
-              reasoning: number;
-              cache: { read: number; write: number };
-            };
-          }
-        | undefined
-    )?.tokens;
-    const sessionTotal = sessionTokens ? spentTokenCount(sessionTokens) : 0;
-    const total = breakdownTotal > 0 ? breakdownTotal : sessionTotal;
 
     return { total, perModel };
   });

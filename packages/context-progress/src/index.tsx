@@ -78,10 +78,21 @@ function View(props: { api: TuiPluginApi; sessionID: string; theme: TuiThemeCurr
     return { tokens, contextWindow, percent };
   });
 
+  const compactCount = createMemo(() => {
+    let count = 0;
+    for (const message of messages()) {
+      const parts = props.api.state.part(message.id);
+      for (const part of parts) {
+        if (part.type === "compaction") count++;
+      }
+    }
+    return count;
+  });
+
   const detailLine = createMemo(() => {
     const state = usage();
     const limitText = state.contextWindow > 0 ? formatInt(state.contextWindow) : "--";
-    return `${formatInt(state.tokens)} / ${limitText} / ${formatMoney(sessionCost())}`;
+    return `${formatInt(state.tokens)} / ${limitText} / ${formatMoney(sessionCost())} / ↻ ${compactCount()}`;
   });
 
   const progress = createMemo(() => {
